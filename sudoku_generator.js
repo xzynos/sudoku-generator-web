@@ -51,22 +51,21 @@ export class SudokuGenerator {
 
         const gridCells = solutionGrid.map(gridRow => [...gridRow]);
 
-        const gridCoordinatesOrdered = []
+        const gridCoordinates = []
         for (let gridRow = 0; gridRow <= 8; gridRow++) {
             for (let gridColumn = 0; gridColumn <= 8; gridColumn++) {
-                gridCoordinatesOrdered.push([gridRow, gridColumn]);
+                gridCoordinates.push([gridRow, gridColumn]);
             }
         }
-
-        const gridCoordinatesShuffled = this._shuffleArray(gridCoordinatesOrdered)
+        this._shuffleArray(gridCoordinates)
 
         let removalAttemptsRemaining = removalAttemptsDifficulty[difficultyLabel] || 0;
 
         while (
-            gridCoordinatesShuffled.length > 0 &&
+            gridCoordinates.length > 0 &&
             removalAttemptsRemaining > 0
         ) {
-            const gridCoordinate = gridCoordinatesShuffled.pop();
+            const gridCoordinate = gridCoordinates.pop();
             const gridRow = gridCoordinate[0];
             const gridColumn = gridCoordinate[1];
 
@@ -166,7 +165,8 @@ export class SudokuGenerator {
         for (let gridRow = 0; gridRow < 9; gridRow++) {
             for (let gridColumn = 0; gridColumn < 9; gridColumn++) {
                 if (grid[gridRow][gridColumn] === 0) {
-                    const gridCellValues = this._shuffleArray([1,2,3,4,5,6,7,8,9]);
+                    const gridCellValues = [1,2,3,4,5,6,7,8,9];
+                    this._shuffleArray(gridCellValues);
 
                     for (let gridCellValue of gridCellValues) {
                         if (
@@ -212,7 +212,11 @@ export class SudokuGenerator {
     /**
      * Shuffle elements in array
      */
-    _shuffleArray(array) {
-        return array.sort(() => Math.random() - 0.5);
+    _shuffleArray(arrayReference) {
+        for (let index1 = arrayReference.length - 1; index1 > 0; index1--) {
+            const index2 = Math.floor(Math.random() * (index1 + 1));
+
+            [arrayReference[index1], arrayReference[index2]] = [arrayReference[index2], arrayReference[index1]];
+        }
     }
 }
