@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Sudoku PDF Generator</title>
+    </head>
+    <body>
+        <p>
+            Difficulty:
+            <select id="generate-sudoku-puzzles-difficulty" aria-label="Difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+                <option value="extreme">Wah Lau</option>
+            </select>
+        </p>
+        <p>
+            Number of Puzzles:
+            <input
+                id="generate-sudoku-puzzles-count"
+                type="number"
+                min="1"
+                step="1"
+                value="4"
+            />
+        </p>
+        <p>
+            <button id="generate-sudoku-pdf-button" type="button">Generate Sudoku PDF</button>
+        </p>
+        <p id="generate-sudoku-message"></p>
+
+        <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+        <script type="module">
+            import { SudokuGenerator } from "./sudoku_generator.js";
+            import { SudokuPDFRenderer } from "./sudoku_pdf_renderer.js";
+
+            const generateSudokuPuzzlesDifficultyInput = document.getElementById("generate-sudoku-puzzles-difficulty");
+            const generateSudokuPuzzleCountInput = document.getElementById("generate-sudoku-puzzles-count");
+            const generateSudokuPdfButton = document.getElementById("generate-sudoku-pdf-button");
+            const generateSudokuMessage = document.getElementById("generate-sudoku-message");
+
+            generateSudokuPdfButton.addEventListener("click", () => {
+                const generateSudokuPuzzleCountInt = Number.parseInt(generateSudokuPuzzleCountInput.value, 10);
+
+                if (
+                    !Number.isInteger(generateSudokuPuzzleCountInt) ||
+                    generateSudokuPuzzleCountInt < 1
+                ) {
+                    generateSudokuMessage.innerHTML = "Number of puzzles must be 1 or greater.";
+
+                    return;
+                }
+
+                generateSudokuPdfButton.disabled = true;
+
+                try {
+                    const sudokuGenerator = new SudokuGenerator();
+                    const sudokuPuzzles = [];
+                    for (let index = 0; index < generateSudokuPuzzleCountInt; index++) {
+                        sudokuPuzzles.push(
+                            sudokuGenerator.generate(generateSudokuPuzzlesDifficultyInput.value)
+                        )
+                    }
+
+                    const sudokuPdfRenderer = new SudokuPDFRenderer();
+                    const sudokuPdfFilename = `sudoku-${generateSudokuPuzzlesDifficultyInput.value}-${generateSudokuPuzzleCountInt}.pdf`;
+                    sudokuPdfRenderer.render(sudokuPuzzles, sudokuPdfFilename);
+                } catch (error) {
+                    console.error(error);
+
+                    generateSudokuMessage.innerHTML = error?.message || "Failed to generate the PDF.";
+                } finally {
+                    generateSudokuPdfButton.disabled = false;
+                }
+            });
+        </script>
+    </body>
+</html>
