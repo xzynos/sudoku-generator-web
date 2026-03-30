@@ -50,13 +50,11 @@
             const generateSudokuPdfButton = document.getElementById("generate-sudoku-pdf-button");
             const generateSudokuMessage = document.getElementById("generate-sudoku-message");
 
-            generateSudokuPdfButton.addEventListener("click", () => {
+            generateSudokuPdfButton.addEventListener("click", async () => {
+                const generateSudokuPuzzlesDifficultyLabelStr = generateSudokuPuzzlesDifficultyInput.value;
                 const generateSudokuPuzzleCountInt = Number.parseInt(generateSudokuPuzzleCountInput.value, 10);
 
-                if (
-                    !Number.isInteger(generateSudokuPuzzleCountInt) ||
-                    generateSudokuPuzzleCountInt < 1
-                ) {
+                if (generateSudokuPuzzleCountInt < 1) {
                     generateSudokuMessage.innerHTML = "Number of puzzles must be 1 or greater.";
 
                     return;
@@ -64,25 +62,50 @@
 
                 generateSudokuPdfButton.disabled = true;
 
-                try {
-                    const sudokuGenerator = new SudokuGenerator();
+                if (window.Worker) {
                     const sudokuPuzzles = [];
-                    for (let index = 0; index < generateSudokuPuzzleCountInt; index++) {
-                        sudokuPuzzles.push(
-                            sudokuGenerator.generate(generateSudokuPuzzlesDifficultyInput.value)
-                        )
-                    }
+
+                    await new Promise((resolve, reject) => {
+                        const sudokuGenerationWorker = new Worker(
+                            "sudoku_generation_worker.js",
+                            {
+                                type: "module",
+                            }
+                        );
+
+                        sudokuGenerationWorker.onmessage = function(event) {
+                            switch (event.data.type) {
+                                case "SUDOKU_PUZZLE":
+                                    sudokuPuzzles.push(event.data.sudokuPuzzle);
+                                    generateSudokuMessage.innerHTML = `Generated ${sudokuPuzzles.length}/${generateSudokuPuzzleCountInt} Sudoku puzzles.`
+                                    break;
+                                case "COMPLETION":
+                                    resolve();
+                                    return;
+                                default:
+                                    break;
+                            }
+                        };
+
+                        sudokuGenerationWorker.onerror = (error) => {
+                            reject(error);
+                            sudokuGenerationWorker.terminate();
+                        };
+
+                        sudokuGenerationWorker.postMessage({
+                            generateSudokuPuzzlesDifficultyLabel: generateSudokuPuzzlesDifficultyLabelStr,
+                            generateSudokuPuzzlesCount: generateSudokuPuzzleCountInt,
+                        });
+                    });
 
                     const sudokuPdfRenderer = new SudokuPDFRenderer();
-                    const sudokuPdfFilename = `sudoku-${generateSudokuPuzzlesDifficultyInput.value}-${generateSudokuPuzzleCountInt}.pdf`;
+                    const sudokuPdfFilename = `sudoku-${generateSudokuPuzzlesDifficultyLabelStr}-${generateSudokuPuzzleCountInt}.pdf`;
                     sudokuPdfRenderer.render(sudokuPuzzles, sudokuPdfFilename);
-                } catch (error) {
-                    console.error(error);
-
-                    generateSudokuMessage.innerHTML = error?.message || "Failed to generate the PDF.";
-                } finally {
-                    generateSudokuPdfButton.disabled = false;
+                } else {
+                    generateSudokuMessage.innerHTML = "This browser does not support web workers."
                 }
+
+                generateSudokuPdfButton.disabled = false;
             });
         </script>
     </body>
