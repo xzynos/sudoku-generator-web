@@ -53,6 +53,7 @@
                 const generateSudokuPuzzlesDifficultyLabelStr = generateSudokuPuzzlesDifficultyInput.value;
                 const generateSudokuPuzzleCountInt = Number.parseInt(generateSudokuPuzzleCountInput.value, 10);
 
+                //#region Perform checks before generating Sudoku puzzles
                 if (generateSudokuPuzzleCountInt < 1) {
                     generateSudokuMessage.innerHTML = "Number of puzzles must be 1 or greater.";
 
@@ -64,9 +65,11 @@
 
                     return;
                 }
+                //#endregion
 
                 generateSudokuPdfButton.disabled = true;
 
+                //#region Generate Sudoku puzzles
                 const sudokuPuzzles = [];
                 await new Promise((resolve, reject) => {
                     const sudokuGenerationWorker = new Worker(
@@ -102,7 +105,9 @@
                         generateSudokuPuzzlesCount: generateSudokuPuzzleCountInt,
                     });
                 });
+                //#endregion
 
+                //#region Render Sudoku PDF
                 let sudokuPdfBlob;
                 await new Promise((resolve, reject) => {
                     const sudokuPdfRenderingWorker = new Worker(
@@ -146,6 +151,7 @@
                 sudokuPdfDownloadElement.download = sudokuPdfFilename;
                 sudokuPdfDownloadElement.click();
                 URL.revokeObjectURL(sudokuPdfDownloadUrl);
+                //#endregion
 
                 generateSudokuPdfButton.disabled = false;
             });
