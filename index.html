@@ -40,50 +40,6 @@
         </p>
         <p id="generate-sudoku-message"></p>
 
-        <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-        <script type="module">
-            import { SudokuGenerator } from "./sudoku_generator.js";
-            import { SudokuPDFRenderer } from "./sudoku_pdf_renderer.js";
-
-            const generateSudokuPuzzlesDifficultyInput = document.getElementById("generate-sudoku-puzzles-difficulty");
-            const generateSudokuPuzzleCountInput = document.getElementById("generate-sudoku-puzzles-count");
-            const generateSudokuPdfButton = document.getElementById("generate-sudoku-pdf-button");
-            const generateSudokuMessage = document.getElementById("generate-sudoku-message");
-
-            generateSudokuPdfButton.addEventListener("click", () => {
-                const generateSudokuPuzzleCountInt = Number.parseInt(generateSudokuPuzzleCountInput.value, 10);
-
-                if (
-                    !Number.isInteger(generateSudokuPuzzleCountInt) ||
-                    generateSudokuPuzzleCountInt < 1
-                ) {
-                    generateSudokuMessage.innerHTML = "Number of puzzles must be 1 or greater.";
-
-                    return;
-                }
-
-                generateSudokuPdfButton.disabled = true;
-
-                try {
-                    const sudokuGenerator = new SudokuGenerator();
-                    const sudokuPuzzles = [];
-                    for (let index = 0; index < generateSudokuPuzzleCountInt; index++) {
-                        sudokuPuzzles.push(
-                            sudokuGenerator.generate(generateSudokuPuzzlesDifficultyInput.value)
-                        )
-                    }
-
-                    const sudokuPdfRenderer = new SudokuPDFRenderer();
-                    const sudokuPdfFilename = `sudoku-${generateSudokuPuzzlesDifficultyInput.value}-${generateSudokuPuzzleCountInt}.pdf`;
-                    sudokuPdfRenderer.render(sudokuPuzzles, sudokuPdfFilename);
-                } catch (error) {
-                    console.error(error);
-
-                    generateSudokuMessage.innerHTML = error?.message || "Failed to generate the PDF.";
-                } finally {
-                    generateSudokuPdfButton.disabled = false;
-                }
-            });
-        </script>
+        <script type="module" src="main.js"></script>
     </body>
 </html>

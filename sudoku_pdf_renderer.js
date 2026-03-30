@@ -1,4 +1,4 @@
-const { jsPDF } = window.jspdf;
+import { jsPDF } from "https://esm.sh/jspdf";
 
 /**
  * Generate PDF from Sudoku puzzles
@@ -20,7 +20,6 @@ export class SudokuPDFRenderer {
      */
     render(
         sudokuPuzzles,
-        filename,
     ) {
         this.document.setFont("courier", "normal");
 
@@ -30,7 +29,7 @@ export class SudokuPDFRenderer {
 
         this._renderSolutionPages(sudokuPuzzles);
 
-        this.document.save(filename);
+        return this.document.output("arraybuffer");
     }
 
     /**
