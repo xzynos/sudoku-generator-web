@@ -1,6 +1,3 @@
-import { SudokuGenerator } from "./sudoku_generator.js";
-import { SudokuPDFRenderer } from "./sudoku_pdf_renderer.js";
-
 const generateSudokuPuzzlesDifficultyInput = document.getElementById("generate-sudoku-puzzles-difficulty");
 const generateSudokuPuzzleCountInput = document.getElementById("generate-sudoku-puzzles-count");
 const generateSudokuPdfButton = document.getElementById("generate-sudoku-pdf-button");
