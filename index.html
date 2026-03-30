@@ -70,6 +70,8 @@
                 generateSudokuPdfButton.disabled = true;
 
                 //#region Generate Sudoku puzzles
+                generateSudokuMessage.innerHTML = "Generating Sudoku puzzles."
+
                 const sudokuPuzzles = [];
                 await new Promise((resolve, reject) => {
                     const sudokuGenerationWorker = new Worker(
@@ -108,6 +110,8 @@
                 //#endregion
 
                 //#region Render Sudoku PDF
+                generateSudokuMessage.innerHTML = "Rendering Sudoku PDF."
+
                 let sudokuPdfBlob;
                 await new Promise((resolve, reject) => {
                     const sudokuPdfRenderingWorker = new Worker(
