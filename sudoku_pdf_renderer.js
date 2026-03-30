@@ -1,4 +1,4 @@
-const { jsPDF } = window.jspdf;
+import { jsPDF } from "https://esm.sh/jspdf";
 
 /**
  * Generate PDF from Sudoku puzzles
