@@ -71,9 +71,7 @@
                 await new Promise((resolve, reject) => {
                     const sudokuGenerationWorker = new Worker(
                         "sudoku_generation_worker.js",
-                        {
-                            type: "module",
-                        }
+                        {type: "module"}
                     );
 
                     sudokuGenerationWorker.onmessage = function(event) {
@@ -109,9 +107,7 @@
                 await new Promise((resolve, reject) => {
                     const sudokuPdfRenderingWorker = new Worker(
                         "sudoku_pdf_rendering_worker.js",
-                        {
-                            type: "module",
-                        }
+                        {type: "module"}
                     );
 
                     sudokuPdfRenderingWorker.onmessage = function(event) {
