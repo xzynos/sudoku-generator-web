@@ -102,9 +102,46 @@
                     });
                 });
 
-                const sudokuPdfRenderer = new SudokuPDFRenderer();
-                const sudokuPdfFilename = `sudoku-${generateSudokuPuzzlesDifficultyLabelStr}-${generateSudokuPuzzleCountInt}.pdf`;
-                sudokuPdfRenderer.render(sudokuPuzzles, sudokuPdfFilename);
+                let sudokuPdfBlob;
+                await new Promise((resolve, reject) => {
+                    const sudokuPdfRenderingWorker = new Worker(
+                        "sudoku_pdf_rendering_worker.js",
+                        {
+                            type: "module",
+                        }
+                    );
+
+                    sudokuPdfRenderingWorker.onmessage = function(event) {
+                        switch (event.data.type) {
+                            case "SUDOKU_PDF":
+                                sudokuPdfBlob = new Blob(
+                                    [event.data.sudokuPdf],
+                                    {type: "application/pdf"},
+                                );
+                                break;
+                            case "COMPLETION":
+                                resolve();
+                                return;
+                            default:
+                                break;
+                        }
+                    };
+
+                    sudokuPdfRenderingWorker.onerror = (error) => {
+                        reject(error);
+                        sudokuPdfRenderingWorker.terminate();
+                    };
+
+                    sudokuPdfRenderingWorker.postMessage({
+                        renderSudokuPuzzles: sudokuPuzzles,
+                    });
+                });
+                const sudokuPdfDownloadUrl = URL.createObjectURL(sudokuPdfBlob);
+                const sudokuPdfDownloadElement = document.createElement("a");
+                sudokuPdfDownloadElement.href = sudokuPdfDownloadUrl;
+                sudokuPdfDownloadElement.download = `sudoku-${generateSudokuPuzzlesDifficultyLabelStr}-${generateSudokuPuzzleCountInt}.pdf`;
+                sudokuPdfDownloadElement.click();
+                URL.revokeObjectURL(sudokuPdfDownloadUrl);
 
                 generateSudokuPdfButton.disabled = false;
             });
