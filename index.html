@@ -80,7 +80,11 @@
                         switch (event.data.type) {
                             case "SUDOKU_PUZZLE":
                                 sudokuPuzzles.push(event.data.sudokuPuzzle);
-                                generateSudokuMessage.innerHTML = `Generated ${sudokuPuzzles.length}/${generateSudokuPuzzleCountInt} Sudoku puzzles.`
+                                let sudokuGenerationStatusMessage = "";
+                                sudokuGenerationStatusMessage += "Generated "
+                                sudokuGenerationStatusMessage += `${sudokuPuzzles.length}/${generateSudokuPuzzleCountInt} `
+                                sudokuGenerationStatusMessage += "Sudoku puzzles."
+                                generateSudokuMessage.innerHTML = sudokuGenerationStatusMessage
                                 break;
                             case "COMPLETION":
                                 resolve();
@@ -135,10 +139,15 @@
                         renderSudokuPuzzles: sudokuPuzzles,
                     });
                 });
+                let sudokuPdfFilename = "";
+                sudokuPdfFilename += "sudoku-";
+                sudokuPdfFilename += `${generateSudokuPuzzlesDifficultyLabelStr}-`;
+                sudokuPdfFilename += `${generateSudokuPuzzleCountInt}`;
+                sudokuPdfFilename += ".pdf";
                 const sudokuPdfDownloadUrl = URL.createObjectURL(sudokuPdfBlob);
                 const sudokuPdfDownloadElement = document.createElement("a");
                 sudokuPdfDownloadElement.href = sudokuPdfDownloadUrl;
-                sudokuPdfDownloadElement.download = `sudoku-${generateSudokuPuzzlesDifficultyLabelStr}-${generateSudokuPuzzleCountInt}.pdf`;
+                sudokuPdfDownloadElement.download = sudokuPdfFilename;
                 sudokuPdfDownloadElement.click();
                 URL.revokeObjectURL(sudokuPdfDownloadUrl);
 
