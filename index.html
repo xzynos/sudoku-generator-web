@@ -60,50 +60,51 @@
                     return;
                 }
 
+                if (!window.Worker) {
+                    generateSudokuMessage.innerHTML = "This browser does not support web workers."
+
+                    return;
+                }
+
                 generateSudokuPdfButton.disabled = true;
 
-                if (window.Worker) {
-                    const sudokuPuzzles = [];
+                const sudokuPuzzles = [];
+                await new Promise((resolve, reject) => {
+                    const sudokuGenerationWorker = new Worker(
+                        "sudoku_generation_worker.js",
+                        {
+                            type: "module",
+                        }
+                    );
 
-                    await new Promise((resolve, reject) => {
-                        const sudokuGenerationWorker = new Worker(
-                            "sudoku_generation_worker.js",
-                            {
-                                type: "module",
-                            }
-                        );
+                    sudokuGenerationWorker.onmessage = function(event) {
+                        switch (event.data.type) {
+                            case "SUDOKU_PUZZLE":
+                                sudokuPuzzles.push(event.data.sudokuPuzzle);
+                                generateSudokuMessage.innerHTML = `Generated ${sudokuPuzzles.length}/${generateSudokuPuzzleCountInt} Sudoku puzzles.`
+                                break;
+                            case "COMPLETION":
+                                resolve();
+                                return;
+                            default:
+                                break;
+                        }
+                    };
 
-                        sudokuGenerationWorker.onmessage = function(event) {
-                            switch (event.data.type) {
-                                case "SUDOKU_PUZZLE":
-                                    sudokuPuzzles.push(event.data.sudokuPuzzle);
-                                    generateSudokuMessage.innerHTML = `Generated ${sudokuPuzzles.length}/${generateSudokuPuzzleCountInt} Sudoku puzzles.`
-                                    break;
-                                case "COMPLETION":
-                                    resolve();
-                                    return;
-                                default:
-                                    break;
-                            }
-                        };
+                    sudokuGenerationWorker.onerror = (error) => {
+                        reject(error);
+                        sudokuGenerationWorker.terminate();
+                    };
 
-                        sudokuGenerationWorker.onerror = (error) => {
-                            reject(error);
-                            sudokuGenerationWorker.terminate();
-                        };
-
-                        sudokuGenerationWorker.postMessage({
-                            generateSudokuPuzzlesDifficultyLabel: generateSudokuPuzzlesDifficultyLabelStr,
-                            generateSudokuPuzzlesCount: generateSudokuPuzzleCountInt,
-                        });
+                    sudokuGenerationWorker.postMessage({
+                        generateSudokuPuzzlesDifficultyLabel: generateSudokuPuzzlesDifficultyLabelStr,
+                        generateSudokuPuzzlesCount: generateSudokuPuzzleCountInt,
                     });
+                });
 
-                    const sudokuPdfRenderer = new SudokuPDFRenderer();
-                    const sudokuPdfFilename = `sudoku-${generateSudokuPuzzlesDifficultyLabelStr}-${generateSudokuPuzzleCountInt}.pdf`;
-                    sudokuPdfRenderer.render(sudokuPuzzles, sudokuPdfFilename);
-                } else {
-                    generateSudokuMessage.innerHTML = "This browser does not support web workers."
-                }
+                const sudokuPdfRenderer = new SudokuPDFRenderer();
+                const sudokuPdfFilename = `sudoku-${generateSudokuPuzzlesDifficultyLabelStr}-${generateSudokuPuzzleCountInt}.pdf`;
+                sudokuPdfRenderer.render(sudokuPuzzles, sudokuPdfFilename);
 
                 generateSudokuPdfButton.disabled = false;
             });
