@@ -16,6 +16,6 @@ This Sudoku generator aims to allow users to generate as many Sudoku puzzles as 
 
 ## Motivation
 
-My dad is an avid Sudoku player who thrives on challenging puzzles. He often finishes entire puzzle books faster than we can buy them. I initially explored existing online Sudoku generators, but they came with limitations. Many restrict the number of puzzles you can generate due to their reliance on server-side generation, and the puzzles themselves are often too easy to keep him engaged.
+My dad is an avid Sudoku player who thrives on challenging puzzles. He often finishes entire puzzle books faster than we can buy them. I initially explored existing online Sudoku generators, but they came with limitations. Many restrict the number of puzzles you can generate due to their reliance on server-side generation, and the puzzles themselves are often too easy to keep him engaged. To address these limitations, I decided to build my own Sudoku generator instead.
 
-To address these limitations, I built this Sudoku generator with one goal in mind: to create a steady supply of genuinely challenging Sudoku puzzles that meet his standards.
+Update 31/03/2026: He seems to like it
