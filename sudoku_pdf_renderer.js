@@ -25,6 +25,9 @@ export class SudokuPDFRenderer {
 
         this._renderPuzzlePages(sudokuPuzzles);
 
+        if (this.document.getNumberOfPages() % 2 !== 0) {
+            this.document.addPage();
+        }
         this.document.addPage();
 
         this._renderSolutionPages(sudokuPuzzles);
