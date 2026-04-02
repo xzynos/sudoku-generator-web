@@ -26,7 +26,7 @@ export class SudokuPDFRenderer {
         this._renderPuzzlePages(sudokuPuzzles);
 
         if (this.document.getNumberOfPages() % 2 !== 0) {
-            this.document.addPage();
+            this._renderBlankPage();
         }
         this.document.addPage();
 
@@ -123,6 +123,24 @@ export class SudokuPDFRenderer {
                 gridCellFontSize,
             );
         }
+    }
+
+    /**
+     * Render a blank page
+     */
+    _renderBlankPage() {
+        this.document.addPage();
+        this.document.setFont("courier", "normal");
+        this.document.setFontSize(20);
+        this.document.text(
+            "This is a blank page",
+            this.pageWidth / 2,
+            this.pageHeight / 2,
+            {
+                align: "center",
+                baseline: "middle",
+            }
+        );
     }
 
     /**
