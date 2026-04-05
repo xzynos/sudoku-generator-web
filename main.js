@@ -34,9 +34,11 @@ generateSudokuPdfButton.addEventListener("click", async function() {
     );
     const sudokuGenerationWorkerPromises = [];
     for (let index = 0; index < sudokuGenerationWorkerCount; index++) {
+        // Calculate number of puzzles to generate per worker
         let sudokuGenerationPuzzleCount = Math.floor(generateSudokuPuzzleCountInt / sudokuGenerationWorkerCount);
         sudokuGenerationPuzzleCount += (index < generateSudokuPuzzleCountInt % sudokuGenerationWorkerCount ? 1 : 0);
 
+        // Create and store worker promises in array
         sudokuGenerationWorkerPromises.push(
             new Promise(function(resolve, reject) {
                 const sudokuGenerationWorker = new Worker(
