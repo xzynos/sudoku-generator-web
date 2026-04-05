@@ -1,5 +1,6 @@
 const generateSudokuPuzzlesDifficultyInput = document.getElementById("generate-sudoku-puzzles-difficulty");
 const generateSudokuPuzzleCountInput = document.getElementById("generate-sudoku-puzzles-count");
+const generateSudokuPuzzleConcurrencyInput = document.getElementById("generate-sudoku-puzzles-concurrency");
 const generateSudokuPdfButton = document.getElementById("generate-sudoku-pdf-button");
 const generateSudokuMessage = document.getElementById("generate-sudoku-message");
 
@@ -29,7 +30,7 @@ generateSudokuPdfButton.addEventListener("click", async function() {
     const sudokuPuzzles = [];
 
     const sudokuGenerationWorkerCount = Math.min(
-        16,
+        (generateSudokuPuzzleConcurrencyInput.checked ? navigator.hardwareConcurrency : 1),
         generateSudokuPuzzleCountInt,
     );
     const sudokuGenerationWorkerPromises = [];
