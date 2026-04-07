@@ -1,5 +1,6 @@
 const generateSudokuPuzzlesDifficultyInput = document.getElementById("generate-sudoku-puzzles-difficulty");
 const generateSudokuPuzzleCountInput = document.getElementById("generate-sudoku-puzzles-count");
+const generateSudokuPuzzleConcurrencyInput = document.getElementById("generate-sudoku-puzzles-concurrency");
 const generateSudokuPdfButton = document.getElementById("generate-sudoku-pdf-button");
 const generateSudokuMessage = document.getElementById("generate-sudoku-message");
 
@@ -27,38 +28,55 @@ generateSudokuPdfButton.addEventListener("click", async function() {
     generateSudokuMessage.innerHTML = "Generating Sudoku puzzles.";
 
     const sudokuPuzzles = [];
-    await new Promise(function(resolve, reject) {
-        const sudokuGenerationWorker = new Worker(
-            "sudoku_generation_worker.js",
-            {type: "module"}
+
+    const sudokuGenerationWorkerCount = Math.min(
+        (generateSudokuPuzzleConcurrencyInput.checked ? navigator.hardwareConcurrency : 1),
+        generateSudokuPuzzleCountInt,
+    );
+    const sudokuGenerationWorkerPromises = [];
+    for (let index = 0; index < sudokuGenerationWorkerCount; index++) {
+        // Calculate number of puzzles to generate per worker
+        let sudokuGenerationPuzzleCount = Math.floor(generateSudokuPuzzleCountInt / sudokuGenerationWorkerCount);
+        sudokuGenerationPuzzleCount += (index < generateSudokuPuzzleCountInt % sudokuGenerationWorkerCount ? 1 : 0);
+
+        // Create and store worker promises in array
+        sudokuGenerationWorkerPromises.push(
+            new Promise(function(resolve, reject) {
+                const sudokuGenerationWorker = new Worker(
+                    "sudoku_generation_worker.js",
+                    {type: "module"}
+                );
+
+                sudokuGenerationWorker.onmessage = function(event) {
+                    let sudokuGenerationStatusMessage = "";
+                    switch (event.data.type) {
+                        case "SUDOKU_PUZZLE":
+                            sudokuPuzzles.push(event.data.sudokuPuzzle);
+                            sudokuGenerationStatusMessage += "Generated ";
+                            sudokuGenerationStatusMessage += `${sudokuPuzzles.length}/${generateSudokuPuzzleCountInt} `;
+                            sudokuGenerationStatusMessage += "Sudoku puzzles.";
+                            generateSudokuMessage.innerHTML = sudokuGenerationStatusMessage;
+                            break;
+                        case "COMPLETION":
+                            resolve();
+                            return;
+                    }
+                };
+
+                sudokuGenerationWorker.onerror = function(error) {
+                    reject(error);
+                    sudokuGenerationWorker.terminate();
+                };
+
+                sudokuGenerationWorker.postMessage({
+                    generateSudokuPuzzlesDifficultyLabel: generateSudokuPuzzlesDifficultyLabelStr,
+                    generateSudokuPuzzlesCount: sudokuGenerationPuzzleCount,
+                });
+            })
         );
+    }
 
-        sudokuGenerationWorker.onmessage = function(event) {
-            let sudokuGenerationStatusMessage = "";
-            switch (event.data.type) {
-                case "SUDOKU_PUZZLE":
-                    sudokuPuzzles.push(event.data.sudokuPuzzle);
-                    sudokuGenerationStatusMessage += "Generated ";
-                    sudokuGenerationStatusMessage += `${sudokuPuzzles.length}/${generateSudokuPuzzleCountInt} `;
-                    sudokuGenerationStatusMessage += "Sudoku puzzles.";
-                    generateSudokuMessage.innerHTML = sudokuGenerationStatusMessage;
-                    break;
-                case "COMPLETION":
-                    resolve();
-                    return;
-            }
-        };
-
-        sudokuGenerationWorker.onerror = function(error) {
-            reject(error);
-            sudokuGenerationWorker.terminate();
-        };
-
-        sudokuGenerationWorker.postMessage({
-            generateSudokuPuzzlesDifficultyLabel: generateSudokuPuzzlesDifficultyLabelStr,
-            generateSudokuPuzzlesCount: generateSudokuPuzzleCountInt,
-        });
-    });
+    await Promise.all(sudokuGenerationWorkerPromises);
     //#endregion
 
     //#region Render Sudoku PDF

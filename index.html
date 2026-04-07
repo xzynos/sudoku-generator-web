@@ -18,6 +18,9 @@
         <p>Source Code: <a href="https://github.com/xzynos/sudoku-generator-web">https://github.com/xzynos/sudoku-generator-web</a></p>
         <hr/>
         <p>
+            <h3> General Settings</h3>
+        </p>
+        <p>
             Difficulty:
             <select id="generate-sudoku-puzzles-difficulty" aria-label="Difficulty">
                 <option value="easy">Easy</option>
@@ -36,6 +39,19 @@
                 value="4"
             />
         </p>
+        <hr/>
+        <p>
+            <h3> Advanced Settings</h3>
+        </p>
+        <p>
+            Enable Concurrency:
+            <input
+                id="generate-sudoku-puzzles-concurrency"
+                type="checkbox"
+                checked="checked"
+            />
+        </p>
+        <hr/>
         <p>
             <button id="generate-sudoku-pdf-button" type="button">Generate Sudoku PDF</button>
         </p>
