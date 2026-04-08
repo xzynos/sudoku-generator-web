@@ -112,6 +112,9 @@ generateSudokuPdfButton.addEventListener("click", async function() {
             renderSudokuPuzzles: sudokuPuzzles,
         });
     });
+
+    generateSudokuMessage.innerHTML = "Rendered Sudoku PDF.";
+
     let sudokuPdfFilename = "";
     sudokuPdfFilename += "sudoku-";
     sudokuPdfFilename += `${generateSudokuPuzzlesDifficultyLabelStr}-`;
@@ -126,4 +129,6 @@ generateSudokuPdfButton.addEventListener("click", async function() {
     //#endregion
 
     generateSudokuPdfButton.disabled = false;
+
+    generateSudokuMessage.innerHTML = "Sudoku PDF generation is complete.";
 });
