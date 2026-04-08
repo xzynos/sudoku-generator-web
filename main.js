@@ -10,13 +10,13 @@ generateSudokuPdfButton.addEventListener("click", async function() {
 
     //#region Perform checks before generating Sudoku puzzles
     if (generateSudokuPuzzleCountInt < 1) {
-        generateSudokuMessage.innerHTML = "Number of puzzles must be 1 or greater.";
+        generateSudokuMessage.textContent = "Number of puzzles must be 1 or greater.";
 
         return;
     }
 
     if (!window.Worker) {
-        generateSudokuMessage.innerHTML = "This browser does not support web workers.";
+        generateSudokuMessage.textContent = "This browser does not support web workers.";
 
         return;
     }
@@ -25,7 +25,7 @@ generateSudokuPdfButton.addEventListener("click", async function() {
     generateSudokuPdfButton.disabled = true;
 
     //#region Generate Sudoku puzzles
-    generateSudokuMessage.innerHTML = "Generating Sudoku puzzles.";
+    generateSudokuMessage.textContent = "Generating Sudoku puzzles.";
 
     const sudokuPuzzles = [];
 
@@ -55,7 +55,7 @@ generateSudokuPdfButton.addEventListener("click", async function() {
                             sudokuGenerationStatusMessage += "Generated ";
                             sudokuGenerationStatusMessage += `${sudokuPuzzles.length}/${generateSudokuPuzzleCountInt} `;
                             sudokuGenerationStatusMessage += "Sudoku puzzles.";
-                            generateSudokuMessage.innerHTML = sudokuGenerationStatusMessage;
+                            generateSudokuMessage.textContent = sudokuGenerationStatusMessage;
                             break;
                         case "COMPLETION":
                             resolve();
@@ -80,7 +80,7 @@ generateSudokuPdfButton.addEventListener("click", async function() {
     //#endregion
 
     //#region Render Sudoku PDF
-    generateSudokuMessage.innerHTML = "Rendering Sudoku PDF.";
+    generateSudokuMessage.textContent = "Rendering Sudoku PDF.";
 
     let sudokuPdfBlob;
     await new Promise(function(resolve, reject) {
@@ -113,7 +113,7 @@ generateSudokuPdfButton.addEventListener("click", async function() {
         });
     });
 
-    generateSudokuMessage.innerHTML = "Rendered Sudoku PDF.";
+    generateSudokuMessage.textContent = "Rendered Sudoku PDF.";
 
     let sudokuPdfFilename = "";
     sudokuPdfFilename += "sudoku-";
@@ -130,5 +130,5 @@ generateSudokuPdfButton.addEventListener("click", async function() {
 
     generateSudokuPdfButton.disabled = false;
 
-    generateSudokuMessage.innerHTML = "Sudoku PDF generation is complete.";
+    generateSudokuMessage.textContent = "Sudoku PDF generation is complete.";
 });
