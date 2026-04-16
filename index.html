@@ -1,62 +1,178 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Sudoku PDF Generator</title>
-        <link href="https://www.fangjie-lim.com/assets/img/favicon.png" rel="icon">
-    </head>
-    <body>
-        <p>
-            <h1> Sudoku PDF Generator</h1>
-        </p>
-        <p>
-            This site generates Sudoku puzzles on the client side and renders them as a downloadable PDF file.
-            Although there are no restrictions on the number of puzzles you can generate in one go,
-            the time required to generate the puzzles is dependent on the performance of your system.
-        </p>
-        <p>Source Code: <a href="https://github.com/xzynos/sudoku-generator-web">https://github.com/xzynos/sudoku-generator-web</a></p>
-        <hr/>
-        <p>
-            <h3> General Settings</h3>
-        </p>
-        <p>
-            Difficulty:
-            <select id="generate-sudoku-puzzles-difficulty" aria-label="Difficulty">
-                <option value="easy">Easy</option>
-                <option value="medium" selected>Medium</option>
-                <option value="hard">Hard</option>
-                <option value="extreme">Wah Lau</option>
-            </select>
-        </p>
-        <p>
-            Number of Puzzles:
-            <input
-                id="generate-sudoku-puzzles-count"
-                type="number"
-                min="1"
-                step="1"
-                value="4"
-            />
-        </p>
-        <hr/>
-        <p>
-            <h3> Advanced Settings</h3>
-        </p>
-        <p>
-            Enable Concurrency:
-            <input
-                id="generate-sudoku-puzzles-concurrency"
-                type="checkbox"
-                checked="checked"
-            />
-        </p>
-        <hr/>
-        <p>
-            <button id="generate-sudoku-pdf-button" type="button">Generate Sudoku PDF</button>
-        </p>
-        <p id="generate-sudoku-message"></p>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sudoku PDF Generator</title>
 
-        <script type="module" src="main.js"></script>
-    </body>
+    <link href="https://www.fangjie-lim.com/assets/img/favicon.png" rel="icon" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Ubuntu:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"
+      integrity="sha512-b2QcS5SsA8tZodcDtGRELiGv5SaKSk1vDHDaQRda0htPYWZ6046lr3kJ5bAAQdpV2mmA/4v0wQF9MyU6/pDIAg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <div class="background-orb orb-primary"></div>
+      <div class="background-orb orb-secondary"></div>
+
+      <section class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-lg-9 col-xl-7">
+            <div class="generator-panel">
+              <h1 class="display-title">Sudoku PDF Generator</h1>
+              <p class="lead-copy mb-4">
+                Generate Sudoku puzzle PDFs directly in your browser.
+                Choose a difficulty, set the number of puzzles you want,
+                and the site will download the file automatically when it is ready.
+              </p>
+
+              <form class="row g-4" novalidate>
+                <div class="col-12">
+                  <div class="settings-section">
+                    <div class="section-heading">
+                      <h2 class="section-title">General Options</h2>
+                      <p class="section-copy mb-0">
+                        Set the options below before generating the PDF.
+                      </p>
+                    </div>
+
+                    <div class="row g-4">
+                      <div class="col-12 col-md-6">
+                        <label
+                          class="form-label"
+                          for="generate-sudoku-puzzles-difficulty"
+                        >
+                          Difficulty
+                        </label>
+                        <select
+                          id="generate-sudoku-puzzles-difficulty"
+                          class="form-select"
+                          aria-label="Difficulty"
+                        >
+                          <option value="easy">Easy</option>
+                          <option value="medium" selected>Medium</option>
+                          <option value="hard">Hard</option>
+                          <option value="extreme">Wah Lau</option>
+                        </select>
+                      </div>
+
+                      <div class="col-12 col-md-6">
+                        <label
+                          class="form-label"
+                          for="generate-sudoku-puzzles-count"
+                        >
+                          Number of Puzzles
+                        </label>
+                        <input
+                          id="generate-sudoku-puzzles-count"
+                          class="form-control"
+                          type="number"
+                          min="1"
+                          step="1"
+                          value="4"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="settings-section">
+                    <div class="section-heading">
+                      <h2 class="section-title">Advanced Settings</h2>
+                      <p class="section-copy mb-0">
+                        Fine-tune performance behavior for compatible browsers and devices.
+                      </p>
+                    </div>
+
+                    <div class="option-tile">
+                      <div>
+                        <p class="option-title mb-1">Enable Concurrency</p>
+                        <p class="option-copy mb-0">
+                          Use multiple workers when available to speed up generation on capable devices.
+                        </p>
+                      </div>
+                      <div class="form-check form-switch">
+                        <input
+                          id="generate-sudoku-puzzles-concurrency"
+                          class="form-check-input"
+                          type="checkbox"
+                          role="switch"
+                          checked="checked"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div
+                    id="generate-sudoku-message"
+                    class="status-message"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    Sudoku PDF generator is ready.
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <button
+                    id="generate-sudoku-pdf-button"
+                    class="btn btn-primary action-button"
+                    type="button"
+                  >
+                    Generate Sudoku PDF
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <div class="container">
+        <p class="footer-copy mb-0">
+          Made with ❤️ by
+          <a
+            class="footer-link"
+            href="https://www.fangjie-lim.com/"
+            target="_blank"
+            rel="noopener"
+          >
+            Fang Jie
+          </a>
+          .
+          View the source on
+          <a
+            class="footer-link"
+            href="https://github.com/xzynos/sudoku-generator-web"
+            target="_blank"
+            rel="noopener"
+          >
+            GitHub
+          </a>
+          .
+        </p>
+      </div>
+    </footer>
+
+    <script type="module" src="main.js"></script>
+  </body>
 </html>

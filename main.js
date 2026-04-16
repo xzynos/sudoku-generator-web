@@ -4,19 +4,35 @@ const generateSudokuPuzzleConcurrencyInput = document.getElementById("generate-s
 const generateSudokuPdfButton = document.getElementById("generate-sudoku-pdf-button");
 const generateSudokuMessage = document.getElementById("generate-sudoku-message");
 
+function setGenerateSudokuMessage(message, variant = "default") {
+    generateSudokuMessage.textContent = message;
+    generateSudokuMessage.classList.remove("is-error", "is-success");
+
+    if (variant === "error") {
+        generateSudokuMessage.classList.add("is-error");
+
+        return;
+    }
+    if (variant === "success") {
+        generateSudokuMessage.classList.add("is-success");
+
+        return;
+    }
+}
+
 generateSudokuPdfButton.addEventListener("click", async function() {
     const generateSudokuPuzzlesDifficultyLabelStr = generateSudokuPuzzlesDifficultyInput.value;
     const generateSudokuPuzzleCountInt = Number.parseInt(generateSudokuPuzzleCountInput.value, 10);
 
     //#region Perform checks before generating Sudoku puzzles
     if (generateSudokuPuzzleCountInt < 1) {
-        generateSudokuMessage.innerHTML = "Number of puzzles must be 1 or greater.";
+        setGenerateSudokuMessage("Number of puzzles must be 1 or greater.", "error");
 
         return;
     }
 
     if (!window.Worker) {
-        generateSudokuMessage.innerHTML = "This browser does not support web workers.";
+        setGenerateSudokuMessage("This browser does not support web workers.", "error");
 
         return;
     }
@@ -25,7 +41,7 @@ generateSudokuPdfButton.addEventListener("click", async function() {
     generateSudokuPdfButton.disabled = true;
 
     //#region Generate Sudoku puzzles
-    generateSudokuMessage.innerHTML = "Generating Sudoku puzzles.";
+    setGenerateSudokuMessage("Generating Sudoku puzzles.");
 
     const sudokuPuzzles = [];
 
@@ -55,7 +71,7 @@ generateSudokuPdfButton.addEventListener("click", async function() {
                             sudokuGenerationStatusMessage += "Generated ";
                             sudokuGenerationStatusMessage += `${sudokuPuzzles.length}/${generateSudokuPuzzleCountInt} `;
                             sudokuGenerationStatusMessage += "Sudoku puzzles.";
-                            generateSudokuMessage.innerHTML = sudokuGenerationStatusMessage;
+                            setGenerateSudokuMessage(sudokuGenerationStatusMessage);
                             break;
                         case "COMPLETION":
                             resolve();
@@ -80,7 +96,7 @@ generateSudokuPdfButton.addEventListener("click", async function() {
     //#endregion
 
     //#region Render Sudoku PDF
-    generateSudokuMessage.innerHTML = "Rendering Sudoku PDF.";
+    setGenerateSudokuMessage("Rendering Sudoku PDF.");
 
     let sudokuPdfBlob;
     await new Promise(function(resolve, reject) {
@@ -112,6 +128,9 @@ generateSudokuPdfButton.addEventListener("click", async function() {
             renderSudokuPuzzles: sudokuPuzzles,
         });
     });
+
+    setGenerateSudokuMessage("Rendered Sudoku PDF.");
+
     let sudokuPdfFilename = "";
     sudokuPdfFilename += "sudoku-";
     sudokuPdfFilename += `${generateSudokuPuzzlesDifficultyLabelStr}-`;
@@ -126,4 +145,6 @@ generateSudokuPdfButton.addEventListener("click", async function() {
     //#endregion
 
     generateSudokuPdfButton.disabled = false;
+
+    setGenerateSudokuMessage("Sudoku PDF generation is complete.", "success");
 });

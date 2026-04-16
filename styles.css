@@ -1,0 +1,274 @@
+:root {
+    --background-color: #1f1f1f;
+    --default-color: #d4d4d4;
+    --heading-color: #9cdcfe;
+    --accent-color: #ce9178;
+    --surface-color: #232323;
+    --surface-elevated: #2c2c2c;
+    --contrast-color: #310606;
+    --border-color: rgba(212, 212, 212, 0.12);
+    --shadow-color: rgba(0, 0, 0, 0.35);
+    --bs-body-font-family: "Roboto", system-ui, sans-serif;
+    --bs-border-radius: 1rem;
+    --bs-border-radius-lg: 1.5rem;
+    --bs-primary: #ce9178;
+    --bs-primary-rgb: 206, 145, 120;
+    --bs-body-color: var(--default-color);
+    --bs-body-bg: var(--background-color);
+    --bs-heading-color: var(--heading-color);
+    --bs-secondary-bg: var(--surface-color);
+    --bs-border-color: var(--border-color);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--default-color);
+    background:
+        radial-gradient(circle at top left, rgba(86, 156, 214, 0.18), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(206, 145, 120, 0.16), transparent 28%),
+        linear-gradient(180deg, #191919 0%, #1f1f1f 100%);
+    font-family: "Roboto", system-ui, sans-serif;
+}
+
+a {
+    color: inherit;
+}
+
+.app-shell {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 2rem 0;
+    overflow: hidden;
+}
+
+.background-orb {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(0);
+    pointer-events: none;
+}
+
+.orb-primary {
+    top: 8%;
+    left: -4rem;
+    width: 14rem;
+    height: 14rem;
+    background: radial-gradient(circle, rgba(86, 156, 214, 0.24), transparent 70%);
+}
+
+.orb-secondary {
+    right: -3rem;
+    bottom: 10%;
+    width: 16rem;
+    height: 16rem;
+    background: radial-gradient(circle, rgba(206, 145, 120, 0.18), transparent 72%);
+}
+
+.generator-panel {
+    position: relative;
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 1.75rem;
+    background: linear-gradient(180deg, rgba(44, 44, 44, 0.96), rgba(35, 35, 35, 0.96));
+    box-shadow: 0 24px 60px var(--shadow-color);
+    backdrop-filter: blur(14px);
+}
+
+.display-title {
+    margin: 0 0 0.85rem;
+    color: #569cd6;
+    font-family: "Ubuntu", sans-serif;
+    font-size: clamp(2.1rem, 5vw, 3.35rem);
+    font-weight: 700;
+    line-height: 1.05;
+}
+
+.lead-copy {
+    max-width: 36rem;
+    color: rgba(212, 212, 212, 0.86);
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.settings-section {
+    padding: 1.15rem;
+    border: 1px solid rgba(212, 212, 212, 0.08);
+    border-radius: 1.25rem;
+    background-color: rgba(31, 31, 31, 0.42);
+}
+
+.section-heading {
+    margin-bottom: 1rem;
+}
+
+.section-title {
+    margin: 0 0 0.35rem;
+    color: var(--heading-color);
+    font-family: "Ubuntu", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.section-copy {
+    color: rgba(212, 212, 212, 0.68);
+    font-size: 0.94rem;
+    line-height: 1.55;
+}
+
+.form-label {
+    margin-bottom: 0.65rem;
+    color: var(--heading-color);
+    font-weight: 500;
+}
+
+.form-select,
+.form-control {
+    min-height: 3.25rem;
+    border: 1px solid rgba(212, 212, 212, 0.12);
+    background-color: rgba(31, 31, 31, 0.96);
+    color: var(--default-color);
+    border-radius: 1rem;
+    padding: 0.8rem 1rem;
+}
+
+.form-select:focus,
+.form-control:focus {
+    border-color: rgba(206, 145, 120, 0.8);
+    box-shadow: 0 0 0 0.25rem rgba(206, 145, 120, 0.16);
+    background-color: rgba(31, 31, 31, 0.96);
+    color: var(--default-color);
+}
+
+.form-select option {
+    color: rgba(212, 212, 212, 0.96);
+    background-color: rgba(31, 31, 31, 0.98);
+}
+
+.option-tile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(212, 212, 212, 0.08);
+    border-radius: 1.15rem;
+    background-color: rgba(159, 220, 254, 0.04);
+}
+
+.option-title {
+    color: var(--heading-color);
+    font-weight: 500;
+}
+
+.option-copy {
+    color: rgba(212, 212, 212, 0.72);
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.form-check.form-switch .form-check-input {
+    width: 2.5rem;
+    height: 1.5rem;
+    border-color: rgba(206, 145, 120, 0.8);
+    background-color: rgba(58, 58, 58, 0.96);
+    box-shadow: none;
+}
+
+.form-check.form-switch .form-check-input:focus {
+    border-color: rgba(206, 145, 120, 0.8);
+    box-shadow: 0 0 0 0.25rem rgba(206, 145, 120, 0.16);
+}
+
+.form-check.form-switch .form-check-input:checked {
+    border-color: rgba(206, 145, 120, 0.95);
+    background-color: var(--accent-color);
+}
+
+.action-button {
+    min-height: 3.35rem;
+    padding: 0.9rem 1.35rem;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ce9178, #dea38b);
+    color: var(--contrast-color);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    box-shadow: 0 14px 30px rgba(206, 145, 120, 0.2);
+}
+
+.action-button:hover,
+.action-button:focus {
+    color: var(--contrast-color);
+    background: linear-gradient(135deg, #d79b81, #e4ac96);
+}
+
+.action-button:disabled {
+    opacity: 0.7;
+    box-shadow: none;
+}
+
+.status-message {
+    min-height: 3.4rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(156, 220, 254, 0.15);
+    border-radius: 1rem;
+    background-color: rgba(86, 156, 214, 0.08);
+    color: var(--heading-color);
+    line-height: 1.5;
+}
+
+.status-message.is-error {
+    border-color: rgba(206, 145, 120, 0.32);
+    background-color: rgba(206, 145, 120, 0.12);
+    color: #ffd7c9;
+}
+
+.status-message.is-success {
+    border-color: rgba(156, 220, 254, 0.24);
+    background-color: rgba(86, 156, 214, 0.14);
+    color: #cfefff;
+}
+
+.app-footer {
+    padding: 0 0 1.5rem;
+}
+
+.footer-copy {
+    text-align: center;
+    color: rgba(212, 212, 212, 0.64);
+    font-size: 0.95rem;
+}
+
+.footer-link {
+    color: var(--heading-color);
+    text-decoration: none;
+}
+
+.footer-link:hover,
+.footer-link:focus {
+    color: var(--accent-color);
+}
+
+@media (max-width: 767.98px) {
+    .app-shell {
+        padding: 1.25rem 0;
+    }
+
+    .generator-panel {
+        padding: 1.4rem;
+        border-radius: 1.35rem;
+    }
+
+    .option-tile {
+        align-items: flex-start;
+    }
+}
