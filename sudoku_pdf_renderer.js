@@ -31,6 +31,7 @@ export class SudokuPDFRenderer {
         this.document.addPage();
 
         this._renderSolutionPages(sudokuPuzzles);
+        this._renderFooters();
 
         return this.document.output("arraybuffer");
     }
@@ -141,6 +142,44 @@ export class SudokuPDFRenderer {
                 baseline: "middle",
             }
         );
+    }
+
+    /**
+     * Render page footers
+     */
+    _renderFooters() {
+        const footerUrl = "https://sudoku.fangjie-lim.com";
+        const footerFontSize = 10;
+        const footerMarginHorizontal = 16;
+        const footerMarginBottom = 10;
+        const footerY = this.pageHeight - footerMarginBottom;
+        const documentPageCount = this.document.getNumberOfPages();
+
+        this.document.setFont("courier", "normal");
+        this.document.setFontSize(footerFontSize);
+
+        for (let pageNumber = 1; pageNumber <= documentPageCount; pageNumber++) {
+            this.document.setPage(pageNumber);
+            this.document.text(
+                footerUrl,
+                footerMarginHorizontal,
+                footerY,
+                {
+                    align: "left",
+                    baseline: "bottom",
+                }
+            );
+
+            this.document.text(
+                `Page ${pageNumber} / ${documentPageCount}`,
+                this.pageWidth - footerMarginHorizontal,
+                footerY,
+                {
+                    align: "right",
+                    baseline: "bottom",
+                }
+            );
+        }
     }
 
     /**
