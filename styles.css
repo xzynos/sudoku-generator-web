@@ -279,4 +279,8 @@ a {
     .option-tile {
         align-items: flex-start;
     }
+
+    .app-footer {
+        padding: 0 0 1.25rem;
+    }
 }
